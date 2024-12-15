@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 use anchor_lang::prelude::*;
 
 //mod increase_liquidity_v2;
@@ -8,16 +10,16 @@ declare_id!("DjQNrS7m8ZBKnPuGU76kRnUzer2wz96kjMsj9fUbEVqX");
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub enum RaydiumInstruction {
-    AddLiquidity {
-        amount_a: u64,
-        amount_b: u64,
-        amount_a_min: u64,
-        amount_b_min: u64,
+    IncreaseLiquidityV2 {
+        liquidity: u128,
+        amount_0_max: u64,
+        amount_1_max: u64,
+        base_flag: Option<bool>,
     },
-    RemoveLiquidity {
-        amount: u64,
-        amount_a_min: u64,
-        amount_b_min: u64,
+    DecreaseLiquidityV2 {
+        liquidity: u128,
+        amount_0_min: u64,
+        amount_1_min: u64,
     },
 }
 
@@ -28,28 +30,25 @@ pub mod raydium_example {
     use super::*;
 
     pub fn provide_liquidity(
-        ctx: Context<Initialize>,
-        amount_a: u64,
-        amount_b: u64,
-        amount_a_min: u64,
-        amount_b_min: u64,
+        ctx: Context<ManageLiquidity>,
+        liquidity: u128,
+        amount_0_max: u64,
+        amount_1_max: u64,
+        base_flag: Option<bool>,
     ) -> Result<()> {
         let raydium_program = ctx.accounts.raydium_program.to_account_info();
 
-        let accounts = vec![
-            ctx.accounts.pool.to_account_info(),
-            ctx.accounts.token_a.to_account_info(),
-            ctx.accounts.token_b.to_account_info(),
-        ];
-
-        let ix = RaydiumInstruction::AddLiquidity {
-            amount_a,
-            amount_b,
-            amount_a_min,
-            amount_b_min,
+        // Prepare transaction to increase Raydium liquidity.
+        let tx = RaydiumInstruction::IncreaseLiquidityV2 {
+            liquidity,
+            amount_0_max,
+            amount_1_max,
+            base_flag,
         };
 
-        let data = ix.try_to_vec()?;
+        let accounts = ctx.accounts.get_increase_liquidity_accounts();
+
+        let data = tx.try_to_vec()?;
 
         let instruction = Instruction {
             program_id: *raydium_program.key,
@@ -64,17 +63,117 @@ pub mod raydium_example {
             data,
         };
 
+        // Call the Raydium `increaseLiquidityV2` method.
+        invoke(&instruction, &accounts)?;
+
+        // ###
+        //
+        // ... Imagine some important work and logic here...
+        //
+        // ###
+
+        // Prepare transaction to decrease Raydium liquidity.
+        let tx = RaydiumInstruction::DecreaseLiquidityV2 {
+            liquidity,
+            amount_0_min: 0,
+            amount_1_min: 0,
+        };
+
+        let accounts = ctx.accounts.get_decrease_liquidity_accounts();
+
+        let data = tx.try_to_vec()?;
+
+        let instruction = Instruction {
+            program_id: *raydium_program.key,
+            accounts: accounts
+                .iter()
+                .map(|a| AccountMeta {
+                    pubkey: *a.key,
+                    is_signer: a.is_signer,
+                    is_writable: a.is_writable,
+                })
+                .collect(),
+            data,
+        };
+
+        // Call the Raydium `decreaseLiquidityV2` method.
         invoke(&instruction, &accounts).map_err(Into::into)
     }
 }
 
 #[derive(Accounts)]
-pub struct Initialize<'info> {
-    pub raydium_program: Program<'info, System>,
-    /// CHECK: TODO
-    pub pool: AccountInfo<'info>,
-    /// CHECK: TODO
-    pub token_a: AccountInfo<'info>,
-    /// CHECK: TODO
-    pub token_b: AccountInfo<'info>,
+pub struct ManageLiquidity<'info> {
+    #[account(mut)]
+    pub user: Signer<'info>,
+    #[account(address = Pubkey::from_str(RAYDIUM_PROGRAM_ID).unwrap())]
+    pub raydium_program: AccountInfo<'info>,
+    pub nft_account: AccountInfo<'info>,
+    #[account(mut)]
+    pub pool_state: AccountInfo<'info>,
+    #[account(mut)]
+    pub protocol_position: AccountInfo<'info>,
+    #[account(mut)]
+    pub personal_position: AccountInfo<'info>,
+    #[account(mut)]
+    pub token_account_0: AccountInfo<'info>,
+    #[account(mut)]
+    pub token_account_1: AccountInfo<'info>,
+    #[account(mut)]
+    pub token_vault_0: AccountInfo<'info>,
+    #[account(mut)]
+    pub token_vault_1: AccountInfo<'info>,
+    #[account(mut)]
+    pub tick_array_lower: AccountInfo<'info>,
+    #[account(mut)]
+    pub tick_array_upper: AccountInfo<'info>,
+    pub token_program: AccountInfo<'info>,
+    pub token_program_2022: AccountInfo<'info>,
+    pub vault_0_mint: AccountInfo<'info>,
+    pub vault_1_mint: AccountInfo<'info>,
+    pub memo_program: AccountInfo<'info>,
+}
+
+impl<'info> ManageLiquidity<'info> {
+    pub fn get_increase_liquidity_accounts(&self) -> Vec<AccountInfo<'info>> {
+        vec![
+            self.user.to_account_info(),
+            self.nft_account.to_account_info(),
+            self.pool_state.to_account_info(),
+            self.protocol_position.to_account_info(),
+            self.personal_position.to_account_info(),
+            self.tick_array_lower.to_account_info(),
+            self.tick_array_upper.to_account_info(),
+            self.token_account_0.to_account_info(),
+            self.token_account_1.to_account_info(),
+            self.token_vault_0.to_account_info(),
+            self.token_vault_1.to_account_info(),
+            self.token_program.to_account_info(),
+            self.token_program_2022.to_account_info(),
+            self.vault_0_mint.to_account_info(),
+            self.vault_1_mint.to_account_info(),
+        ]
+    }
+
+    pub fn get_decrease_liquidity_accounts(&self) -> Vec<AccountInfo<'info>> {
+        vec![
+            self.user.to_account_info(),
+            self.nft_account.to_account_info(),
+            self.personal_position.to_account_info(),
+            self.pool_state.to_account_info(),
+            self.protocol_position.to_account_info(),
+            self.token_vault_0.to_account_info(),
+            self.token_vault_1.to_account_info(),
+            self.tick_array_lower.to_account_info(),
+            self.tick_array_upper.to_account_info(),
+            // "recipientTokenAccount0"
+            self.token_account_0.to_account_info(),
+            // "recipientTokenAccount1"
+            self.token_account_1.to_account_info(),
+            self.token_program.to_account_info(),
+            self.token_program_2022.to_account_info(),
+            self.memo_program.to_account_info(),
+            self.vault_0_mint.to_account_info(),
+            self.vault_1_mint.to_account_info(),
+        ]
+    }
 }
