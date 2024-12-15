@@ -63,4 +63,4 @@ The contract interacts with Raydium's Concentrated Liquidity (CLMM) smart contra
 
 ## Testing Status
 
-The test suite is currently non-functional and will remain minimal in scope. While basic test structures are in place, full integration testing with the Raydium (SDK) protocol is complicated and setting up the required accounts states takes more time. The implementation focuses on demonstrating the core contract structure and development approach.
+The test suite is currently **non-functional** and will remain incomplete. While basic test structures are in place, full integration testing with the Raydium (SDK) protocol is complicated and setting up and studying the required accounts states takes more time. The implementation focuses on demonstrating the core contract structure and development approach.
