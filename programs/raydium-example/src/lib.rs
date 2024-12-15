@@ -1,8 +1,5 @@
-use std::str::FromStr;
-
 use anchor_lang::prelude::*;
-
-//mod increase_liquidity_v2;
+use std::str::FromStr;
 
 /// The Raydium *Concentrated Liquidity (CLMM)*, from:
 /// https://docs.raydium.io/raydium/protocol/developers/addresses
@@ -112,7 +109,7 @@ pub mod raydium_example {
 }
 
 #[derive(Accounts)]
-// TODO: Safety checks for the accounts, or build with:
+// TODO: Add safety checks to the accounts, for now build with:
 // * `anchor build --skip-lint`, or
 // * `anchor test --skip-lint`
 pub struct ManageLiquidity<'info> {
