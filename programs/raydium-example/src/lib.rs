@@ -112,6 +112,9 @@ pub mod raydium_example {
 }
 
 #[derive(Accounts)]
+// TODO: Safety checks for the accounts, or build with:
+// * `anchor build --skip-lint`, or
+// * `anchor test --skip-lint`
 pub struct ManageLiquidity<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
