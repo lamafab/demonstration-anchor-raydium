@@ -35,7 +35,7 @@ pub mod raydium_example {
 
     use super::*;
 
-    pub fn provide_liquidity(
+    pub fn main_business_logic(
         ctx: Context<ManageLiquidity>,
         liquidity: u128,
         amount_0_max: u64,
@@ -72,9 +72,13 @@ pub mod raydium_example {
         // Call the Raydium `increaseLiquidityV2` method.
         invoke(&instruction, &accounts)?;
 
-        // ###
+        // ### MAIN SMART CONTRACT LOGIC
         //
-        // ... Imagine some important work and logic here...
+        //
+        //
+        // ... imagine some important work and logic here...
+        //
+        //
         //
         // ###
 
