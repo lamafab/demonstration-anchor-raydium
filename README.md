@@ -29,8 +29,15 @@ avm use latest
 solana config set --url localhost
 solana-keygen new --no-bip39-passphrase
 
-# (For testing)
+# (For testing) Add Raydium SDK for initial setup.
 yarn add @raydium-io/raydium-sdk-v2
+```
+
+To build, run:
+
+```bash
+# Ignore missing safety checks, for now.
+$ anchor build --skip-lint
 ```
 
 ## Implementation Details
@@ -50,8 +57,8 @@ The contract interacts with Raydium's Concentrated Liquidity (CLMM) smart contra
       - Reference: [Related issue](https://github.com/raydium-io/raydium-clmm/issues/91).
 
 2. Known Issue in Anchor.
-   - **Current Workaround**: Change `version = 4` to `version = 3` in `Cargo.lock` for new Anchor projects.
-   - Issue tracking: [Anchor #3392](https://github.com/coral-xyz/anchor/issues/3392).
+   - **Current Workaround**: Manually change `version = 4` to `version = 3` in `Cargo.lock` for new Anchor projects.
+   - Issue tracking: [Lockfile issue](https://github.com/coral-xyz/anchor/issues/3392).
    - Note: `Cargo.lock` is tracked in this repository.
 
 ## Testing Status

@@ -79,7 +79,7 @@ pub mod raydium_example {
         //
         // ###
 
-        // Prepare transaction to decrease Raydium liquidity.
+        // Prepare transaction to decrease/remove Raydium liquidity.
         let tx = RaydiumInstruction::DecreaseLiquidityV2 {
             liquidity,
             amount_0_min: 0,

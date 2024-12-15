@@ -18,5 +18,5 @@ anchor --version
 solana config set --url localhost
 solana-keygen new --no-bip39-passphrase
 
-# (For testing)
+# (For testing) Add Raydium SDK for initial setup.
 yarn add @raydium-io/raydium-sdk-v2
