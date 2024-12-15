@@ -16,8 +16,6 @@ describe("raydium-example", () => {
   const owner = Keypair.fromSecretKey(Uint8Array.from(""));
 
   let raydium: Raydium;
-  let poolState: PublicKey;
-  let position: any;  // Will contain position info
   let poolInfo: ApiV3PoolInfoConcentratedItem;
   let poolKeys: ClmmKeys;
   let protocolPosition: PublicKey;
@@ -32,13 +30,13 @@ describe("raydium-example", () => {
   let tokenProgram2022: PublicKey;
 
   before(async () => {
-    // Initialize Raydium
+    // Initialize Raydium.
     raydium = await Raydium.load({
       owner,
       connection,
     });
 
-    // SOL-USDC pool
+    // SOL-USDC pool.
     const poolIdStr = 'Enfoa5Xdtirwa46xxa5LUVcQWe7EUb2pGzTjfvU7EBS1';
     const data = await raydium.clmm.getPoolInfoFromRpc(poolIdStr);
     poolInfo = data.poolInfo;
@@ -98,6 +96,8 @@ describe("raydium-example", () => {
     const accountInfo = (await raydium.connection.getAccountInfo(ownerPosition.nftMint));
     tokenProgram = getATAAddress(raydium.ownerPubKey, ownerPosition.nftMint, TOKEN_PROGRAM_ID).publicKey;
     tokenProgram2022 = getATAAddress(raydium.ownerPubKey, ownerPosition.nftMint, TOKEN_2022_PROGRAM_ID).publicKey;
+
+    // TODO: Further account initialization/retrievals required.
   });
 
   it("run main business logic", async () => {
@@ -106,7 +106,6 @@ describe("raydium-example", () => {
     const amount1Max = new anchor.BN("500000");
     const baseFlag = true;
 
-    // Add your test here.
     const tx = await program.methods
       .mainBusinessLogic(
         liquidity,
@@ -114,6 +113,7 @@ describe("raydium-example", () => {
         amount1Max,
         baseFlag
       )
+      // TODO: Complete the accounts.
       .accounts({
         user: provider.wallet.publicKey,
         nftAccount: /* NFT account pubkey */,
