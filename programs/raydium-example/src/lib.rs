@@ -4,6 +4,12 @@ use anchor_lang::prelude::*;
 
 //mod increase_liquidity_v2;
 
+/// The Raydium *Concentrated Liquidity (CLMM)*, from:
+/// https://docs.raydium.io/raydium/protocol/developers/addresses
+///
+/// Available methods:
+/// * https://solscan.io/account/CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK#anchorProgramIdl
+///     * We use the `increaseLiquidityV2` and `decreaseLiquidityV2` methods.
 pub static RAYDIUM_PROGRAM_ID: &str = "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK";
 
 declare_id!("DjQNrS7m8ZBKnPuGU76kRnUzer2wz96kjMsj9fUbEVqX");
