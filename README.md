@@ -15,17 +15,20 @@ Note: A local `.devcontainer/` is provided which can be opened in vscode.
 Software requirements:
 
 ```bash
-# Install Solana CLI
+# Installing the Solana CLI
 sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"
 export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
 echo 'export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"' >> "$HOME/.bashrc"
+solana --version
 
-# Install Anchor Version Manager
+# Installing using Anchor version manager (avm)
 cargo install --git https://github.com/coral-xyz/anchor avm --locked --force
+avm --version
 avm install latest
 avm use latest
+anchor --version
 
-# Configure local environment
+# Setup local environment
 solana config set --url localhost
 solana-keygen new --no-bip39-passphrase
 
