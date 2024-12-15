@@ -61,7 +61,7 @@ The contract interacts with Raydium's Concentrated Liquidity (CLMM) smart contra
 
 2. Known Issue in Anchor.
    - **Current Workaround**: Manually change `version = 4` to `version = 3` in `Cargo.lock` for new Anchor projects.
-   - Issue tracking: [Lockfile issue](https://github.com/coral-xyz/anchor/issues/3392).
+   - Reference: [Lockfile issue](https://github.com/coral-xyz/anchor/issues/3392).
    - Note: `Cargo.lock` is tracked in this repository.
 
 ## Testing Status
