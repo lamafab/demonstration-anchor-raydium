@@ -25,7 +25,7 @@
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "rustc --version",
-	"postCreateCommand": "bash .devcontainer/install.sh"
+	"onCreateCommand": "bash .devcontainer/install.sh"
 
 	// Configure tool-specific properties.
 	// "customizations": {},
